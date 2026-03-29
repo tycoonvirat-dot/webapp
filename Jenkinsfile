@@ -9,7 +9,7 @@ pipeline{
 	  
 	  stage("checkout"){
 	   steps{
-	   git 'https://github.com/nishankainfo/webapp.git'
+	   git 'https://github.com/tycoonvirat-dot/webapp.git'
 	   }
 	                  }
 	
@@ -33,14 +33,14 @@ pipeline{
    stage("deploy"){
 	   steps{
 
-      sshagent(['tomcat']){
+      sshagent(['docker']){
 
 	        sh """
                  
-            scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@43.204.109.89:/home/ec2-user/tomcat10/webapps/
+            scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@43.205.95.36:/usr/local/tomcat/webapps/
 
-              ssh ec2-user@43.204.109.89 /home/ec2-user/tomcat10/bin/shutdown.sh
-               ssh ec2-user@43.204.109.89 /home/ec2-user/tomcat10/bin/startup.sh
+              ssh -o StrictHostKeyChecking=no ec2-user@43.205.95.36 "docker cp /tmp/myweb.war tomcat:/usr/local/tomcat/webapps/"
+               ssh -o StrictHostKeyChecking=no ec2-user@43.205.95.36 "docker restart tomcat"
             
           
           """
@@ -51,14 +51,14 @@ pipeline{
 		}
 		  
 	  }
-stage(backup)
-		  {
-  steps{
+// stage(backup)
+// 		  {
+//   steps{
 
-	  nexusArtifactUploader artifacts: [[artifactId: 'idream-it-solutions', classifier: '', file: 'target/myweb.war', type: '.war']], credentialsId: 'nexus', groupId: 'com.idream.webapp', nexusUrl: '13.204.79.196:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'repoR', version: '1.1'
-  }
+// 	  nexusArtifactUploader artifacts: [[artifactId: 'idream-it-solutions', classifier: '', file: 'target/myweb.war', type: '.war']], credentialsId: 'nexus', groupId: 'com.idream.webapp', nexusUrl: '13.204.79.196:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'repoR', version: '1.1'
+//   }
 	
-}
+// }
 
 	}
 	}
