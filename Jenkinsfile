@@ -32,18 +32,18 @@ pipeline{
    stage("deploy"){
 	   steps{
 
-      sshagent(['docker']){
+      sshagent(['docker']) {
+    sh """
+        ssh -o StrictHostKeyChecking=no ec2-user@65.2.38.221 '
+            mkdir -p /home/ec2-user/tomcat/webapps
+        '
 
-	        sh """
-                 
-            scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@65.2.38.221:/usr/local/tomcat/webapps/
+        scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@65.2.38.221:/home/ec2-user/tomcat/webapps/
 
-              ssh -o StrictHostKeyChecking=no ec2-user@65.2.38.221 "docker cp /tmp/myweb.war tomcat:/usr/local/tomcat/webapps/"
-               ssh -o StrictHostKeyChecking=no ec2-user@65.2.38.221 "docker restart tomcat"
-            
-          
-          """
-
+        ssh -o StrictHostKeyChecking=no ec2-user@65.2.38.221 '
+            docker restart tomcat || echo "Container not found"
+        '
+    """
 }
 
 	   
