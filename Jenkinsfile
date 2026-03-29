@@ -1,7 +1,7 @@
 pipeline{
  tools{
-        jdk 'JAVA_HOME_DOCKER'
-        maven 'M2_HOME_DOCKER'
+        jdk 'JAVA_HOME_DEPLOY'
+        maven 'M2_HOME_DEPLOY'
     }
       agent { label 'deployslave' }
 	  stages{
