@@ -3,8 +3,7 @@ pipeline{
         jdk 'JAVA_HOME_DOCKER'
         maven 'M2_HOME_DOCKER'
     }
-     agent any
-	  
+      agent { label 'dockerslave' }
 	  stages{
 	  
 	  stage("checkout"){
