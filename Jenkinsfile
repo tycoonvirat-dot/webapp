@@ -36,14 +36,13 @@ pipeline{
       sshagent(['docker']) {
 
 	        sh """
-                 
-            scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@3.110.83.113:/home/ec2-user/tomcat/webapps/
+				scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@3.110.83.113:/home/ec2-user/tomcat/webapps/
 
-              ssh ec2-user@3.110.83.113/home/ec2-user/tomcat/bin/shutdown.sh
-              ssh ec2-user@3.110.83.113 /home/ec2-user/tomcat/bin/startup.sh
-            
-          
-          """
+		ssh -o StrictHostKeyChecking=no ec2-user@3.110.83.113 "
+			/home/ec2-user/tomcat/bin/shutdown.sh || true
+			/home/ec2-user/tomcat/bin/startup.sh
+"
+"""
         // some block
 		}
 		}
