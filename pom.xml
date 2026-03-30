@@ -6,7 +6,7 @@
 
   <groupId>com.idream.webapp</groupId>
   <artifactId>idream-it-solutions</artifactId>
-  <version>1.1</version>
+  <version>1.2</version>
   <packaging>war</packaging>
 
   <name>idream-it-solutions</name>
@@ -68,12 +68,12 @@
 <repository>
 <id>repoR</id>
 <name>repoR</name>
-<url>http://3.110.83.113:8082/repository/repoR/</url>
+<url>http://3.110.148.219:8081/repository/repoR/</url>
 </repository>
 <snapshotRepository>
 <id>repoS</id>
 <name>repoS</name>
-<url>http://3.110.83.113:8082/repository/repoS/</url>
+<url>http://3.110.148.219:8081/repository/repoS/</url>
 </snapshotRepository>
 </distributionManagement> 
 </project>
