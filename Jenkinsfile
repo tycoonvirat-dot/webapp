@@ -34,13 +34,13 @@ pipeline{
 
       sshagent(['docker']) {
     sh """
-        ssh -o StrictHostKeyChecking=no ec2-user@65.2.38.221 '
+        ssh -o StrictHostKeyChecking=no ec2-user@3.110.83.113 '
             mkdir -p /home/ec2-user/tomcat/webapps
         '
 
-        scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@65.2.38.221:/home/ec2-user/tomcat/webapps/
+        scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@3.110.83.113:/home/ec2-user/tomcat/webapps/
 
-        ssh -o StrictHostKeyChecking=no ec2-user@65.2.38.221 '
+        ssh -o StrictHostKeyChecking=no ec2-user@3.110.83.113 '
             docker restart tomcat || echo "Container not found"
         '
     """
