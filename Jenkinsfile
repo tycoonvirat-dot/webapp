@@ -31,22 +31,36 @@ pipeline{
 		}
 		}
    stage("deploy"){
-	   steps{
+    steps{
+        sshagent(['docker']) {
+            sh """
+            ssh -o StrictHostKeyChecking=no ec2-user@3.110.83.113 "
 
-      sshagent(['docker']) {
+            # Copy WAR
+            mkdir -p /home/ec2-user/app
+            exit
+            "
 
-	        sh """
-				scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@3.110.83.113:/home/ec2-user/tomcat/webapps/
+            scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@3.110.83.113:/home/ec2-user/app/
 
-		ssh -o StrictHostKeyChecking=no ec2-user@3.110.83.113 "
-			/home/ec2-user/tomcat/bin/shutdown.sh || true
-			/home/ec2-user/tomcat/bin/startup.sh
-"
-"""
-        // some block
-		}
-		}
-		}
+            ssh -o StrictHostKeyChecking=no ec2-user@3.110.83.113 "
+
+            cd /home/ec2-user/app
+
+            # Build Docker image
+            docker build -t myapp .
+
+            # Stop old container
+            docker stop myapp || true
+            docker rm myapp || true
+
+            # Run new container
+            docker run -d -p 8081:8080 --name myapp myapp
+            "
+            """
+        }
+    }
+}
 		stage(backup)
 		  {
  steps{
