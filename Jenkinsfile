@@ -1,15 +1,15 @@
 pipeline{
  tools{
-        jdk 'JAVA_HOME_DEPLOY'
-        maven 'M2_HOME_DEPLOY'
+        jdk 'JAVA_HOME'
+        maven 'M2_HOME'
     }
-     agent { label 'deployslave' }
+     agent any
 	  
 	  stages{
 	  
 	  stage("checkout"){
 	   steps{
-	   git 'https://github.com/tycoonvirat-dot/webapp.git'
+	   git 'https://github.com/tycoonvirat-dot/jenkins-tomcat-webapp.git'
 	   }
 	                  }
 	
@@ -31,44 +31,35 @@ pipeline{
 		}
 		}
    stage("deploy"){
-    steps{
-        sshagent(['docker']) {
-            sh """
-            ssh -o StrictHostKeyChecking=no ec2-user@3.110.83.113 "
+	   steps{
 
-            # Copy WAR
-            mkdir -p /home/ec2-user/app
-            exit
-            "
+      sshagent(['deploy-key']) {
 
-            scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@3.110.83.113:/home/ec2-user/app/
+	        sh """
+                 
+            scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@13.235.24.151:/home/ec2-user/tomcat10/webapps/
 
-            ssh -o StrictHostKeyChecking=no ec2-user@3.110.83.113 "
+              ssh ec2-user@13.235.24.151 /home/ec2-user/tomcat10/bin/shutdown.sh
+              ssh ec2-user@13.235.24.151 /home/ec2-user/tomcat10/bin/startup.sh
+            
+          
+          """
 
-            cd /home/ec2-user/app
-
-            # Build Docker image
-            docker build -t myapp .
-
-            # Stop old container
-            docker stop myapp || true
-            docker rm myapp || true
-
-            # Run new container
-            docker run -d -p 8081:8080 --name myapp myapp
-            "
-            """
-        }
-    }
 }
-		stage(backup)
+
+	   
+		}
+		  
+	  }
+
+stage(backup)
 		  {
- steps{
+  steps{
 
-nexusArtifactUploader artifacts: [[artifactId: 'idream-it-solutions', classifier: '', file: 'target/myweb.war', type: '.war']], credentialsId: 'nexus', groupId: 'com.idream.webapp', nexusUrl: '3.110.83.113:8082', nexusVersion: 'nexus3', protocol: 'http', repository: 'repoR', version: '1.1'
- }
+	  nexusArtifactUploader artifacts: [[artifactId: 'idream-it-solutions', classifier: '', file: 'target/myweb.war', type: 'war']], credentialsId: 'nexus', groupId: 'com.idream.webapp', nexusUrl: '3.110.167.8:8080/nexus/', nexusVersion: 'nexus2', protocol: 'http', repository: 'repoR', version: '1.1'
+	  
+  }
 	
- }
-
+}
 	}
 	}
