@@ -64,4 +64,16 @@
       </plugins>
     </pluginManagement>
   </build>
+<distributionManagement>
+<repository>
+<id>repoR</id>
+<name>repoR</name>
+<url>http://3.110.83.113:8082/repository/repoR/</url>
+</repository>
+<snapshotRepository>
+<id>repoS</id>
+<name>repoS</name>
+<url>http://3.110.83.113:8082/repository/repoS/</url>
+</snapshotRepository>
+</distributionManagement> 
 </project>
