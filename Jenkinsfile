@@ -48,7 +48,7 @@ pipeline{
 		  
 	  }
 
-stage(backup)
+stage("backup")
 // 		  {
 //   steps{
 
