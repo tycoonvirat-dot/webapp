@@ -3,7 +3,8 @@ pipeline{
         jdk 'JAVA_HOME_DEPLOY'
         maven 'M2_HOME_DEPLOY'
     }
-      agent { label 'deployslave' }
+     agent { label 'deployslave' }
+	  
 	  stages{
 	  
 	  stage("checkout"){
@@ -33,31 +34,28 @@ pipeline{
 	   steps{
 
       sshagent(['docker']) {
-    sh """
-        ssh -o StrictHostKeyChecking=no ec2-user@3.110.83.113 '
-            mkdir -p /home/ec2-user/tomcat/webapps
-        '
 
-        scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@3.110.83.113:/home/ec2-user/tomcat/webapps/
+	        sh """
+                 
+            scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@3.110.83.113:/home/ec2-user/tomcat10/webapps/
 
-        ssh -o StrictHostKeyChecking=no ec2-user@3.110.83.113 '
-            docker restart tomcat || echo "Container not found"
-        '
-    """
-}
-
-	   
+              ssh ec2-user@3.110.83.113/home/ec2-user/tomcat10/bin/shutdown.sh
+              ssh ec2-user@3.110.83.113 /home/ec2-user/tomcat10/bin/startup.sh
+            
+          
+          """
+        // some block
 		}
-		  
-	  }
-// stage(backup)
-// 		  {
-//   steps{
+		}
+		}
+		stage(backup)
+		  {
+ steps{
 
-// 	  nexusArtifactUploader artifacts: [[artifactId: 'idream-it-solutions', classifier: '', file: 'target/myweb.war', type: '.war']], credentialsId: 'nexus', groupId: 'com.idream.webapp', nexusUrl: '13.204.79.196:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'repoR', version: '1.1'
-//   }
+nexusArtifactUploader artifacts: [[artifactId: 'idream-it-solutions', classifier: '', file: 'target/myweb.war', type: '.war']], credentialsId: 'nexus', groupId: 'com.idream.webapp', nexusUrl: '3.110.83.113:8082', nexusVersion: 'nexus3', protocol: 'http', repository: 'repoR', version: '1.1'
+ }
 	
-// }
+ }
 
 	}
 	}
