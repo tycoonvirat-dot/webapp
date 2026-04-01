@@ -3,7 +3,7 @@ pipeline{
         jdk 'JAVA_HOME_WINDOW'
         maven 'M2_HOME_WINDOW'
     }
-     agent { label 'winslave' }
+     agent any
 	  
 	  stages{
 	  
