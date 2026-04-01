@@ -3,7 +3,7 @@ pipeline{
         jdk 'JAVA_HOME'
         maven 'M2_HOME'
     }
-      agent { label 'deployslave' }
+      agent { label 'deploymentslaves' }
 	  stages{
 	  
 	  stage("checkout"){
