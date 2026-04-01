@@ -30,23 +30,23 @@ pipeline{
 
 		}
 		}
-   stage("deploy"){
-	   steps{
+//    stage("deploy"){
+// 	   steps{
 
-      sshagent(['docker']) {
-    sh '''
-    scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@3.111.147.110:/home/ec2-user/tomcat1/webapps/
+//       sshagent(['docker']) {
+//     sh '''
+//     scp -o StrictHostKeyChecking=no target/myweb.war ec2-user@3.111.147.110:/home/ec2-user/tomcat1/webapps/
 
-    ssh ec2-user@3.111.147.110 "cd /home/ec2-user/tomcat1/bin && ./shutdown.sh || true"
+//     ssh ec2-user@3.111.147.110 "cd /home/ec2-user/tomcat1/bin && ./shutdown.sh || true"
 
-    ssh ec2-user@3.111.147.110 "cd /home/ec2-user/tomcat1/bin && ./startup.sh"
-    '''
-}
+//     ssh ec2-user@3.111.147.110 "cd /home/ec2-user/tomcat1/bin && ./startup.sh"
+//     '''
+// }
 
 	   
-		}
+// 		}
 		  
-	  }
+// 	  }
 
 // stage("backup")
 // // 		  {
